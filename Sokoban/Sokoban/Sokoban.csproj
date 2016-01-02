@@ -44,14 +44,69 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\ClassicMapBuilder.cs" />
+    <Compile Include="Builder\Director.cs" />
+    <Compile Include="Builder\MapBuilder.cs" />
+    <Compile Include="Builder\RetroMapBuilder.cs" />
+    <Compile Include="Buttons\CustomButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Command\Command.cs" />
+    <Compile Include="Command\Down.cs" />
+    <Compile Include="Command\Left.cs" />
+    <Compile Include="Command\Move.cs" />
+    <Compile Include="Command\Right.cs" />
+    <Compile Include="Command\Up.cs" />
+    <Compile Include="MapParts\Box.cs" />
+    <Compile Include="MapParts\Empty.cs" />
+    <Compile Include="Factory\FactoryMapPart.cs" />
+    <Compile Include="MapParts\Floor.cs" />
+    <Compile Include="MapParts\Part.cs" />
+    <Compile Include="MapParts\Point.cs" />
+    <Compile Include="MapParts\Wall.cs" />
+    <Compile Include="Flyweight\Singleton\GraphicManager.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Memento\Caretaker.cs" />
+    <Compile Include="Memento\Memento.cs" />
+    <Compile Include="Memento\Originator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sound\Player.cs" />
+    <Compile Include="Windows\EndGame.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\EndGame.Designer.cs">
+      <DependentUpon>EndGame.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Game.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\Game.Designer.cs">
+      <DependentUpon>Game.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GameMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\GameMenu.Designer.cs">
+      <DependentUpon>GameMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GamePause.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\GamePause.Designer.cs">
+      <DependentUpon>GamePause.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\GameRanking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Windows\GameRanking.Designer.cs">
+      <DependentUpon>GameRanking.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -74,6 +129,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
