@@ -62,7 +62,7 @@
     <Compile Include="Factory\FactoryMapPart.cs" />
     <Compile Include="MapParts\Floor.cs" />
     <Compile Include="MapParts\Part.cs" />
-    <Compile Include="MapParts\Point.cs" />
+    <Compile Include="MapParts\BoxPoint.cs" />
     <Compile Include="MapParts\Wall.cs" />
     <Compile Include="Flyweight\Singleton\GraphicManager.cs" />
     <Compile Include="Form1.cs">
@@ -71,6 +71,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameMap\Map.cs" />
     <Compile Include="Memento\Caretaker.cs" />
     <Compile Include="Memento\Memento.cs" />
     <Compile Include="Memento\Originator.cs" />

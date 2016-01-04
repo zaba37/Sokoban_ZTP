@@ -6,6 +6,8 @@ using System.Windows.Forms;
 using Sokoban.Windows;
 using Sokoban.Sound;
 using System.Media;
+using Sokoban.Builder;
+using Sokoban.GameMap;
 
 namespace Sokoban
 {
@@ -23,6 +25,12 @@ namespace Sokoban
             SoundPlayer typewriter = Player.getSoundPlayerInstance();
             typewriter.SoundLocation = @"Music\mainMusic.wav";
             typewriter.PlayLooping();
+
+            Director director = new Director();
+            ClassicMapBuilder classic = new ClassicMapBuilder();
+            director.setMapBuilder(classic);
+            director.constructMap(1);
+            Map map = director.getMap();
             
             Application.Run(new GameMenu());
         }
