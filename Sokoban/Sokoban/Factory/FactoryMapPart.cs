@@ -19,7 +19,7 @@ namespace Sokoban.Factory
             return new BoxPoint(x, y, style);
         }
 
-        public Part produceEmpty()
+        public Part produceEmpty(int posX, int posY, String style)
         {
             return new Empty();
         }
