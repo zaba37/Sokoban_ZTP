@@ -6,7 +6,18 @@ using System.Threading.Tasks;
 
 namespace Sokoban.Command
 {
-    class Move
+    public class Move
     {
+        private Command mode;
+
+        public void SetMode(Command command)
+        {
+            mode = command;
+        }
+
+        public void Command()
+        {
+            mode.Execute();
+        }
     }
 }

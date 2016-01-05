@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Sokoban.Command
 {
-    class Command
+    public interface Command
     {
+         void Execute();
     }
 }

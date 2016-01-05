@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sokoban.MapParts
 {
-    class Empty : Part
+    public class Empty : Part
     {
     }
 }

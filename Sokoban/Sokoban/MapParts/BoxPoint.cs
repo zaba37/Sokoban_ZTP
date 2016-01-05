@@ -9,13 +9,13 @@ using System.Windows.Forms;
 
 namespace Sokoban.MapParts
 {
-    public class Wall : Part
+    public class BoxPoint : Part
     {
-        public Image graphics;
+         public Image graphics;
         public int posX;
         public int posY;
 
-        public Wall(int startPosX, int startPosY, String style)
+        public BoxPoint(int startPosX, int startPosY, String style)
         {
             this.posX = startPosX;
             this.posY = startPosY;
@@ -23,11 +23,11 @@ namespace Sokoban.MapParts
             //tutaj if sprawdzi jaki styl ma miec element i wstawi odpowiedni obrazek
             if (style.Contains("retro"))
             {
-                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\Wall.png");
+               this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\EndPoint.png");
             }
             else if (style.Contains("classic"))
             {
-                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\Wall.png");
+               this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\EndPoint.png");
             }
 
             picturebox = new PictureBox();
@@ -39,7 +39,7 @@ namespace Sokoban.MapParts
             picturebox.BackColor = Color.Transparent;
         }
 
-        override public void setPosition(int x, int y)
+       override public void setPosition(int x, int y)
         {
             this.posX = x;
             this.posY = y;
