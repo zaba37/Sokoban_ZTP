@@ -29,7 +29,8 @@ namespace Sokoban.Builder
             List<List<int>> readNumbers = readFile("sokoban_" + lvl + ".txt");
             int posX = 0;
             int posY = 0;
-            List<Point> PointsList = findPositionPoints(readNumbers);
+            List<Point> pointsList = findPositionPoints(readNumbers);
+            mapBuilder.setPointList(pointsList);
 
             for (int i = 0; i < readNumbers.Count(); i++)
             {
@@ -44,7 +45,7 @@ namespace Sokoban.Builder
                         //  Hero newHero = new Hero(heightElement, widthElement, posX, posY);
                        // initList.Add(factory.produceBox(posX, posY, "retro"));
                         lineElementCounter++;
-                        mapBuilder.buildBox(posX, posY);
+                        mapBuilder.buildHero(posX, posY);
                     }
 
 

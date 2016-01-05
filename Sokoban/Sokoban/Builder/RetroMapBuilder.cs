@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sokoban.MapParts;
+using Sokoban.Command;
 
 namespace Sokoban.Builder
 {
@@ -34,6 +35,11 @@ namespace Sokoban.Builder
         public override void buildWall(int posX, int posY)
         {
             singleMapElementLine.Add(factory.produceWall(posX, posY, "retro"));
+        }
+
+        public override void buildHero(int posX, int posY)
+        {
+            singleMapElementLine.Add(factory.produceHero(posX, posY, "retro"));
         }
     }
 }

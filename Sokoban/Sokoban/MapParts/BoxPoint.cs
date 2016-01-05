@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sokoban.Flyweight.Singleton;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Sokoban.MapParts
 {
-    class BoxPoint : Part
+    public class BoxPoint : Part
     {
          public Image graphics;
         public int posX;
@@ -22,11 +23,11 @@ namespace Sokoban.MapParts
             //tutaj if sprawdzi jaki styl ma miec element i wstawi odpowiedni obrazek
             if (style.Contains("retro"))
             {
-                this.graphics = Image.FromFile(@"Map\EndPoint.png");
+               this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\EndPoint.png");
             }
             else if (style.Contains("classic"))
             {
-                this.graphics = Image.FromFile(@"Map\EndPoint.png");
+               this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\EndPoint.png");
             }
 
             picturebox = new PictureBox();

@@ -35,5 +35,10 @@ namespace Sokoban.Builder
         {
             singleMapElementLine.Add(factory.produceWall(posX, posY, "classic"));
         }
+
+        public override void buildHero(int posX, int posY)
+        {
+            singleMapElementLine.Add(factory.produceHero(posX, posY, "classic"));
+        }
     }
 }

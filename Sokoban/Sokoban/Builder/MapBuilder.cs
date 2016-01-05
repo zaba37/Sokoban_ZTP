@@ -34,10 +34,16 @@ namespace Sokoban.Builder
             singleMapElementLine = new List<Part>();
         }
 
+        public void setPointList(List<Point> list)
+        {
+            map.setPointList(list);
+        }
+
         abstract public void buildBox(int posX, int posY);
         abstract public void buildBoxPoint(int posX, int posY);
         abstract public void buildEmpty(int posX, int posY);
         abstract public void buildFloor(int posX, int posY);
         abstract public void buildWall(int posX, int posY);
+        abstract public void buildHero(int posX, int posY);
     }
 }

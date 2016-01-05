@@ -61,6 +61,7 @@
     <Compile Include="MapParts\Empty.cs" />
     <Compile Include="Factory\FactoryMapPart.cs" />
     <Compile Include="MapParts\Floor.cs" />
+    <Compile Include="MapParts\Hero.cs" />
     <Compile Include="MapParts\Part.cs" />
     <Compile Include="MapParts\BoxPoint.cs" />
     <Compile Include="MapParts\Wall.cs" />
@@ -117,7 +118,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="ClassDiagram1.cd" />
+    <EmbeddedResource Include="Windows\Game.resx">
+      <DependentUpon>Game.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

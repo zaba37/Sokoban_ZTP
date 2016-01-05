@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Sokoban.MapParts
 {
-    class Part
+    public class Part
     {
         public PictureBox picturebox;
         protected Point point;

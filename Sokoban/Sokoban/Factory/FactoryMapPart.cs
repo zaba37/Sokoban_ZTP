@@ -33,5 +33,10 @@ namespace Sokoban.Factory
         {
             return new Wall(x, y, style);
         }
+
+        public Part produceHero(int x, int y, String style)
+        {
+            return new Hero(x, y, style);
+        }
     }
 }
