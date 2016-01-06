@@ -20,18 +20,12 @@ namespace Sokoban.Windows
 {
     public partial class Game : Form
     {
-
-
-       SoundPlayer typewriter = Player.getSoundPlayerInstance();
-      //  Pause pauseWindow;
+        private SoundPlayer typewriter = Player.getSoundPlayerInstance();
+        private GamePause pauseWindow;
 
         private List<List<int>> readNumbers;
-      
-
-
         private int mapNumber;
         private int numberOfMap;
-
 
         private int totalPoints;
 
@@ -102,7 +96,7 @@ namespace Sokoban.Windows
 
             mapNumber = 1;
 
-            numberOfMap = 9;  //ILOSC MAP
+            numberOfMap = 2;  //ILOSC MAP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
           //  PointsList = null;
@@ -147,14 +141,12 @@ namespace Sokoban.Windows
             cbStart = new CustomButton(@"Buttons\GameButtons\StartNormal.png", @"Buttons\GameButtons\StartPress.png", @"Buttons\GameButtons\StartFocus.png", 550, 380, "StartTag");
             cbStart.MouseClick += new MouseEventHandler(mouseClick);
 
-
             newDirector = new Director();
             newMove = new Move();
             RetroMapBuilder ret = new RetroMapBuilder();
             newDirector.setMapBuilder(ret);
             newDirector.constructMap(1);
             newMap = newDirector.getMap();          
-            
             initMap(newMap);
 
         }
@@ -213,7 +205,7 @@ namespace Sokoban.Windows
             StepsLabel.Text = "0";
             this.Controls.Add(StepsLabel);
 
-
+            /*
             infoBoxesLabelLocation = new Point(1026, 130);
             infoBoxesLabel = new Label();
             //infoBoxesLabel.Width = 175;
@@ -224,7 +216,7 @@ namespace Sokoban.Windows
             infoBoxesLabel.Text = "Number of shifts boxes: ";
             infoBoxesLabel.AutoSize = true;
             this.Controls.Add(infoBoxesLabel);
-
+             
             BoxesLabelLocation = new Point(1225, 130); //1136
             BoxesLabel = new Label();
             BoxesLabel.Width = 40;
@@ -234,6 +226,7 @@ namespace Sokoban.Windows
             BoxesLabel.BackColor = System.Drawing.Color.Transparent;
             BoxesLabel.Text = "0";
             this.Controls.Add(BoxesLabel);
+             */
             this.Controls.Add(framePb);
         }
 
@@ -247,10 +240,11 @@ namespace Sokoban.Windows
             startScreen[mapNumber - 1].Show();
             initLabels();
             initButtons();
+
             previousnumberShiftsBoxes = 0;
             previousNumberSteps = 0;
 
-            SetBoxes = 0;
+          //  SetBoxes = 0;
             posX = 0;
             posY = 0;
             for (int i = 0; i < map.getSizeX();i++ )
@@ -267,6 +261,7 @@ namespace Sokoban.Windows
             timer = new System.Timers.Timer(100);
             timer.Elapsed += (s, e) => UpdateTime(e);
             timer.AutoReset = true;
+            startTime = DateTime.Now;
             timer.Start();
         }
 
@@ -349,7 +344,7 @@ namespace Sokoban.Windows
 
 
 
-        private void endRound()
+        private void endRound(Hero hero)
         {
             timer.Stop();
             mapNumber++;
@@ -363,7 +358,7 @@ namespace Sokoban.Windows
                 totalPoints = totalPoints + 50;
             if (totalSeconds > 40)
                 totalPoints = totalPoints + 20;
-            double pointsForSteps = ((double)numberSteps) * 0.1;
+            double pointsForSteps = ((double)hero.getNumberSteps()) * 0.1;
 
             totalPoints = totalPoints - (int)pointsForSteps;
             if (totalPoints < 0)
@@ -372,7 +367,7 @@ namespace Sokoban.Windows
 
             this.Controls.Clear();
 
-            mapNumber++;
+           
             if (mapNumber < 5)
             {
                 RetroMapBuilder ret = new RetroMapBuilder();
@@ -398,7 +393,7 @@ namespace Sokoban.Windows
 
         private void pressEsc()
         {
-            /*
+            
             timer.Stop();
             pauseTime = DateTime.Now;
 
@@ -408,7 +403,7 @@ namespace Sokoban.Windows
 
             if (pauseWindow == null)
             {
-                pauseWindow = new Pause();
+                pauseWindow = new GamePause();
                 pauseWindow.Tag = Tag;
             }
 
@@ -421,8 +416,8 @@ namespace Sokoban.Windows
                 var difference = DateTime.Now - pauseTime;
                 startTime = startTime.Add(difference);
 
-                typewriter.Stop();
-                typewriter.SoundLocation = @"Music\step.wav";
+               // typewriter.Stop();
+               // typewriter.SoundLocation = @"Music\step.wav";
 
                 timer.Start();
                 this.Show();
@@ -432,34 +427,47 @@ namespace Sokoban.Windows
             {
                 this.Controls.Clear();
 
-                typewriter.Stop();
-                typewriter.SoundLocation = @"Music\step.wav";
-
-
-                double pointsForSteps = ((double)numberSteps) * 0.1;
+               // typewriter.Stop();
+               // typewriter.SoundLocation = @"Music\step.wav";
+                int[] posHero = newMap.findHeroPosition();
+                Hero hero = (Hero)newMap.getPart(posHero[0], posHero[1]);
+                double pointsForSteps = ((double)hero.getNumberSteps()) * 0.1;
                 totalPoints = totalPoints - (int)pointsForSteps;
 
-                initMap("sokoban_" + mapNumber + ".txt");
+                if (mapNumber < 5)
+                {
+                    RetroMapBuilder ret = new RetroMapBuilder();
+                    newDirector.setMapBuilder(ret);
+                    newDirector.constructMap(mapNumber);
+                    newMap = newDirector.getMap();
+                    newMap.setStyle("retro");
+                }
+                else
+                {
+                    ClassicMapBuilder clas = new ClassicMapBuilder();
+                    newDirector.setMapBuilder(clas);
+                    newDirector.constructMap(mapNumber);
+                    newMap = newDirector.getMap();
+                    newMap.setStyle("classic");
+                }
+                initMap(newMap);
                 this.Show();
             }
 
             if (pauseWindow.flag == 3)
             {
-                typewriter.Stop();
-                typewriter.SoundLocation = @"Music\mainMusic.wav";
-                typewriter.PlayLooping();
+              //  typewriter.Stop();
+              //  typewriter.SoundLocation = @"Music\mainMusic.wav";
+               // typewriter.PlayLooping();
                 this.Close();
             }
-             */
+             
         }
 
 
-        private void endgame()
+        private void endgame(Hero hero)
         {
-            int[] heroPos = newMap.findHeroPosition();
-            Hero hero = (Hero)newMap.getPart(heroPos[0], heroPos[1]);
-
-            numberSteps = hero.getNumberSteps();
+           
             timer.Stop();
             TimeSpan test = elapsedTimeDateTime;
             // DateTime ElapsedTime = DateTime.Parse(elapsedTime);
@@ -470,7 +478,7 @@ namespace Sokoban.Windows
                 totalPoints = totalPoints + 50;
             if (totalSeconds > 40)
                 totalPoints = totalPoints + 20;
-            double pointsForSteps = ((double)numberSteps) * 0.1;
+            double pointsForSteps = ((double)hero.getNumberSteps()) * 0.1;
 
             totalPoints = totalPoints - (int)pointsForSteps;
             if (totalPoints < 0)
@@ -486,7 +494,15 @@ namespace Sokoban.Windows
             this.Close();
         }
 
-
+        private void updateInfo(Hero hero)
+        {
+            if (hero.getNumberSteps() != previousNumberSteps)
+            {
+                StepsLabel.Text = hero.getNumberSteps().ToString();
+                previousNumberSteps = hero.getNumberSteps();
+            }
+           
+        }
 
 
         private void Game_KeyDown(object sender, KeyEventArgs e)
@@ -499,11 +515,12 @@ namespace Sokoban.Windows
                 newMove.SetMode(newUp);
                 newMove.Command();
                 typewriter.Play();
+                updateInfo(hero);
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(),newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
-                        endgame();
-                    endRound();
+                        endgame(hero);
+                    endRound(hero);
                 }
             }
             if (e.KeyValue == 40) //dol
@@ -514,11 +531,12 @@ namespace Sokoban.Windows
                 newMove.SetMode(newDown);
                 newMove.Command();
                 typewriter.Play();
+                updateInfo(hero);
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(), newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
-                        endgame();
-                    endRound();
+                        endgame(hero);
+                    endRound(hero);
                 }
             }
             if (e.KeyValue == 39) //prawo
@@ -529,11 +547,12 @@ namespace Sokoban.Windows
                 newMove.SetMode(newRight);
                 newMove.Command();
                 typewriter.Play();
+                updateInfo(hero);
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(), newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
-                        endgame();
-                    endRound();
+                        endgame(hero);
+                    endRound(hero);
                 }
                 
             }
@@ -546,18 +565,19 @@ namespace Sokoban.Windows
                 newMove.SetMode(newLeft);
                 newMove.Command();
                 typewriter.Play();
+                updateInfo(hero);
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(), newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
-                        endgame();
-                    endRound();
+                        endgame(hero);
+                    endRound(hero);
                 }
             }
 
             if (e.KeyValue == 27) //escape
             {
-               // pressEsc();
-                  Environment.Exit(0);
+                  pressEsc();
+                  //Environment.Exit(0);
             }
 
         }

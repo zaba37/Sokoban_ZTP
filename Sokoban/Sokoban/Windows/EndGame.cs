@@ -96,17 +96,17 @@ namespace Sokoban.Windows
         {
             if (e.Button == MouseButtons.Left)
             {
-                var menu2 = (Menu)Tag;
+                var menu2 = (GameMenu)Tag;
 
                 switch (((CustomButton)sender).Tag.ToString())
                 {
                     case "SaveTag":
                         saveRanking(nameTb.Text, Points);
-                      //  menu2.Show();
+                        menu2.Show();
                         this.Close();
                         break;
                     case "ExitTag":
-                      //  menu2.Show();
+                        menu2.Show();
                         this.Close();
                         break;
                 }
