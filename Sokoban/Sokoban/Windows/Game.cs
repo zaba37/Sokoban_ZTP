@@ -37,7 +37,7 @@ namespace Sokoban.Windows
 
         private int posX;
         private int posY;
-       // List<PointPosition> PointsList;
+        // List<PointPosition> PointsList;
 
         private int SetBoxes;
         private int numberSteps;
@@ -86,8 +86,8 @@ namespace Sokoban.Windows
 
         Map newMap;
         Director newDirector;
-        Move newMove; 
-        
+        Move newMove;
+
 
         public Game()
         {
@@ -104,7 +104,7 @@ namespace Sokoban.Windows
 
             numberOfMap = 2;  //ILOSC MAP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-          //  PointsList = null;
+            //  PointsList = null;
             SetBoxes = 0;
             posX = 0;
             posY = 0;
@@ -151,7 +151,7 @@ namespace Sokoban.Windows
             RetroMapBuilder ret = new RetroMapBuilder();
             newDirector.setMapBuilder(ret);
             newDirector.constructMap(1);
-            newMap = newDirector.getMap();          
+            newMap = newDirector.getMap();
             initMap(newMap);
 
         }
@@ -249,17 +249,17 @@ namespace Sokoban.Windows
             previousnumberShiftsBoxes = 0;
             previousNumberSteps = 0;
 
-          //  SetBoxes = 0;
+            //  SetBoxes = 0;
             posX = 0;
             posY = 0;
-            for (int i = 0; i < map.getSizeX();i++ )
+            for (int i = 0; i < map.getSizeX(); i++)
             {
 
-                for (int j = 0; j < map.getSizeY(i);j++ )
-                {                   
-                   this.Controls.Add(map.getPart(i, j).picturebox);
+                for (int j = 0; j < map.getSizeY(i); j++)
+                {
+                    this.Controls.Add(map.getPart(i, j).picturebox);
                 }
-                    
+
             }
 
 
@@ -342,13 +342,15 @@ namespace Sokoban.Windows
                     case "LeftTag":
                         if (backMoveCounter > 0)
                         {
+                            clearMap(newMap);
                             originator.getStateFromMemento(careTaker.get(backMoveCounter - 1));
                             newMap.setMap(convertMapFromMemento(originator.getState()));
                             backMoveCounter--;
+                            drawPreviousState(newMap);
                         }
                         break;
                 }
-            }  
+            }
         }
 
 
@@ -376,7 +378,7 @@ namespace Sokoban.Windows
 
             this.Controls.Clear();
 
-           
+
             if (mapNumber < 5)
             {
                 RetroMapBuilder ret = new RetroMapBuilder();
@@ -393,16 +395,16 @@ namespace Sokoban.Windows
             }
 
             initMap(newMap);
-            
+
             originator = new Originator();
             careTaker = new CareTaker();
 
-           //UZUPELNIC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            //UZUPELNIC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         }
 
         private void pressEsc()
         {
-            
+
             timer.Stop();
             pauseTime = DateTime.Now;
 
@@ -459,7 +461,7 @@ namespace Sokoban.Windows
                     newMap = newDirector.getMap();
                     newMap.setStyle("classic");
                 }
-                
+
                 originator = new Originator();
                 careTaker = new CareTaker();
 
@@ -474,13 +476,13 @@ namespace Sokoban.Windows
                 typewriter.PlayLooping();
                 this.Close();
             }
-             
+
         }
 
 
         private void endgame(Hero hero)
         {
-           
+
             timer.Stop();
             TimeSpan test = elapsedTimeDateTime;
             // DateTime ElapsedTime = DateTime.Parse(elapsedTime);
@@ -514,7 +516,7 @@ namespace Sokoban.Windows
                 StepsLabel.Text = hero.getNumberSteps().ToString();
                 previousNumberSteps = hero.getNumberSteps();
             }
-           
+
         }
 
 
@@ -531,7 +533,7 @@ namespace Sokoban.Windows
                 newMove.Command();
                 typewriter.Play();
                 updateInfo(hero);
-                if (CheckEndRound(numberSetBoxes(newMap.getMap(),newMap.getPointList()), newMap.getPointList()))
+                if (CheckEndRound(numberSetBoxes(newMap.getMap(), newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
                         endgame(hero);
@@ -540,7 +542,8 @@ namespace Sokoban.Windows
                     backMoveCounter = 0;
                 }
 
-                if(backMoveCounter < 3){
+                if (backMoveCounter < 3)
+                {
                     backMoveCounter++;
                 }
             }
@@ -575,7 +578,7 @@ namespace Sokoban.Windows
                 careTaker.add(originator.saveStateToMemento());
                 int[] heroPos = newMap.findHeroPosition();
                 Hero hero = (Hero)newMap.getPart(heroPos[0], heroPos[1]);
-                Command.Right newRight = new Right(hero, newMap,this.Controls);
+                Command.Right newRight = new Right(hero, newMap, this.Controls);
                 newMove.SetMode(newRight);
                 newMove.Command();
                 typewriter.Play();
@@ -593,7 +596,7 @@ namespace Sokoban.Windows
                 {
                     backMoveCounter++;
                 }
-                
+
             }
 
             if (e.KeyValue == 37) //lewo
@@ -624,13 +627,14 @@ namespace Sokoban.Windows
 
             if (e.KeyValue == 27) //escape
             {
-                  pressEsc();
-                  //Environment.Exit(0);
+                pressEsc();
+                //Environment.Exit(0);
             }
         }
 
-        private List<List<int>> convertMapToMemento(Map map){
-            List<List<int>> state = new List<List<int>>();  
+        private List<List<int>> convertMapToMemento(Map map)
+        {
+            List<List<int>> state = new List<List<int>>();
 
             foreach (List<Part> list in map.getMap())
             {
@@ -747,5 +751,36 @@ namespace Sokoban.Windows
 
             return state;
         }
+
+
+        public void drawPreviousState(Map map)
+        {
+
+
+            for (int i = 0; i < map.getSizeX(); i++)
+            {
+
+                for (int j = 0; j < map.getSizeY(i); j++)
+                {
+                    this.Controls.Add(map.getPart(i, j).picturebox);
+                }
+
+            }
+        }
+
+
+        public void clearMap(Map map)
+        {
+            for (int i = 0; i < map.getSizeX(); i++)
+            {
+
+                for (int j = 0; j < map.getSizeY(i); j++)
+                {
+                    this.Controls.Remove(map.getPart(i, j).picturebox);
+                }
+
+            }
+        }
+
     }
 }
