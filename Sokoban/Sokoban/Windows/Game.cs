@@ -16,12 +16,18 @@ using System.Timers;
 using System.Windows.Forms;
 using System.Windows.Input;
 using Sokoban.Sound;
+using Sokoban.Memento;
+using Sokoban.Factory;
+
 namespace Sokoban.Windows
 {
     public partial class Game : Form
     {
         private SoundPlayer typewriter = Player.getSoundPlayerInstance();
         private GamePause pauseWindow;
+        private int backMoveCounter = 0;
+        private Originator originator = new Originator();
+        private CareTaker careTaker = new CareTaker();
 
         private List<List<int>> readNumbers;
         private int mapNumber;
@@ -94,10 +100,9 @@ namespace Sokoban.Windows
             this.BackgroundImage = Image.FromFile(@"Map\Floor.png");
             this.DoubleBuffered = true;
 
-            mapNumber = 1;
+            mapNumber = 6;
 
             numberOfMap = 2;  //ILOSC MAP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
           //  PointsList = null;
             SetBoxes = 0;
@@ -282,8 +287,13 @@ namespace Sokoban.Windows
         private bool CheckEndRound(int numberSetBox, List<Point> PointsPositionList)
         {
             bool endRound = false;
+
             if (numberSetBox == PointsPositionList.Count())
+            {
                 endRound = true;
+                originator = new Originator();
+                careTaker = new CareTaker();
+            }
 
             return endRound;
         }
@@ -310,14 +320,7 @@ namespace Sokoban.Windows
 
         private void initButtons()
         {
-            cbArrowUp = new CustomButton(@"Buttons\GameButtons\UpNormal.png", @"Buttons\GameButtons\UpPress.png", @"Buttons\GameButtons\UpFocus.png", 1200, 550, "UpTag");
-            cbArrowDown = new CustomButton(@"Buttons\GameButtons\DownNormal.png", @"Buttons\GameButtons\DownPress.png", @"Buttons\GameButtons\DownFocus.png", 1200, 620, "DownTag");
-            cbArrowRight = new CustomButton(@"Buttons\GameButtons\RightNormal.png", @"Buttons\GameButtons\RightPress.png", @"Buttons\GameButtons\RightFocus.png", 1270, 620, "RightTag");
-            cbArrowLeft = new CustomButton(@"Buttons\GameButtons\LeftNormal.png", @"Buttons\GameButtons\LeftPress.png", @"Buttons\GameButtons\LeftFocus.png", 1130, 620, "LeftTag");
-
-            this.Controls.Add(cbArrowUp);
-            this.Controls.Add(cbArrowDown);
-            this.Controls.Add(cbArrowRight);
+            cbArrowLeft = new CustomButton(@"Buttons\GameButtons\LeftNormal.png", @"Buttons\GameButtons\LeftPress.png", @"Buttons\GameButtons\LeftFocus.png", 1270, 620, "LeftTag");
             this.Controls.Add(cbArrowLeft);
         }
 
@@ -333,10 +336,16 @@ namespace Sokoban.Windows
                         timer.Start();
                         startScreen[mapNumber - 1].Hide();
                         cbStart.Hide();
-                        cbArrowUp.MouseClick += new MouseEventHandler(mouseClick);
-                        cbArrowDown.MouseClick += new MouseEventHandler(mouseClick);
-                        cbArrowRight.MouseClick += new MouseEventHandler(mouseClick);
                         cbArrowLeft.MouseClick += new MouseEventHandler(mouseClick);
+                        break;
+
+                    case "LeftTag":
+                        if (backMoveCounter > 0)
+                        {
+                            originator.getStateFromMemento(careTaker.get(backMoveCounter - 1));
+                            newMap.setMap(convertMapFromMemento(originator.getState()));
+                            backMoveCounter--;
+                        }
                         break;
                 }
             }  
@@ -374,7 +383,6 @@ namespace Sokoban.Windows
                 newDirector.setMapBuilder(ret);
                 newDirector.constructMap(mapNumber);
                 newMap = newDirector.getMap();
-                newMap.setStyle("retro");
             }
             else
             {
@@ -382,11 +390,12 @@ namespace Sokoban.Windows
                 newDirector.setMapBuilder(clas);
                 newDirector.constructMap(mapNumber);
                 newMap = newDirector.getMap();
-                newMap.setStyle("classic");
             }
 
             initMap(newMap);
             
+            originator = new Originator();
+            careTaker = new CareTaker();
 
            //UZUPELNIC ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         }
@@ -397,9 +406,9 @@ namespace Sokoban.Windows
             timer.Stop();
             pauseTime = DateTime.Now;
 
-           // typewriter.Stop();
-           // typewriter.SoundLocation = @"Music\pauseMusic.wav";
-            //typewriter.PlayLooping();
+            typewriter.Stop();
+            typewriter.SoundLocation = @"Music\pauseMusic.wav";
+            typewriter.PlayLooping();
 
             if (pauseWindow == null)
             {
@@ -416,8 +425,8 @@ namespace Sokoban.Windows
                 var difference = DateTime.Now - pauseTime;
                 startTime = startTime.Add(difference);
 
-               // typewriter.Stop();
-               // typewriter.SoundLocation = @"Music\step.wav";
+                typewriter.Stop();
+                typewriter.SoundLocation = @"Music\step.wav";
 
                 timer.Start();
                 this.Show();
@@ -427,8 +436,8 @@ namespace Sokoban.Windows
             {
                 this.Controls.Clear();
 
-               // typewriter.Stop();
-               // typewriter.SoundLocation = @"Music\step.wav";
+                typewriter.Stop();
+                typewriter.SoundLocation = @"Music\step.wav";
                 int[] posHero = newMap.findHeroPosition();
                 Hero hero = (Hero)newMap.getPart(posHero[0], posHero[1]);
                 double pointsForSteps = ((double)hero.getNumberSteps()) * 0.1;
@@ -450,15 +459,19 @@ namespace Sokoban.Windows
                     newMap = newDirector.getMap();
                     newMap.setStyle("classic");
                 }
+                
+                originator = new Originator();
+                careTaker = new CareTaker();
+
                 initMap(newMap);
                 this.Show();
             }
 
             if (pauseWindow.flag == 3)
             {
-              //  typewriter.Stop();
-              //  typewriter.SoundLocation = @"Music\mainMusic.wav";
-               // typewriter.PlayLooping();
+                typewriter.Stop();
+                typewriter.SoundLocation = @"Music\mainMusic.wav";
+                typewriter.PlayLooping();
                 this.Close();
             }
              
@@ -509,6 +522,8 @@ namespace Sokoban.Windows
         {
             if (e.KeyValue == 38) //gora
             {
+                originator.setState(convertMapToMemento(newMap));
+                careTaker.add(originator.saveStateToMemento());
                 int[] heroPos = newMap.findHeroPosition();
                 Hero hero = (Hero)newMap.getPart(heroPos[0], heroPos[1]);
                 Command.Up newUp = new Up(hero, newMap, this.Controls);
@@ -521,10 +536,18 @@ namespace Sokoban.Windows
                     if (mapNumber == numberOfMap)
                         endgame(hero);
                     endRound(hero);
+
+                    backMoveCounter = 0;
+                }
+
+                if(backMoveCounter < 3){
+                    backMoveCounter++;
                 }
             }
             if (e.KeyValue == 40) //dol
             {
+                originator.setState(convertMapToMemento(newMap));
+                careTaker.add(originator.saveStateToMemento());
                 int[] heroPos = newMap.findHeroPosition();
                 Hero hero = (Hero)newMap.getPart(heroPos[0], heroPos[1]);
                 Command.Down newDown = new Down(hero, newMap, this.Controls);
@@ -537,10 +560,19 @@ namespace Sokoban.Windows
                     if (mapNumber == numberOfMap)
                         endgame(hero);
                     endRound(hero);
+
+                    backMoveCounter = 0;
+                }
+
+                if (backMoveCounter < 3)
+                {
+                    backMoveCounter++;
                 }
             }
             if (e.KeyValue == 39) //prawo
-            {           
+            {
+                originator.setState(convertMapToMemento(newMap));
+                careTaker.add(originator.saveStateToMemento());
                 int[] heroPos = newMap.findHeroPosition();
                 Hero hero = (Hero)newMap.getPart(heroPos[0], heroPos[1]);
                 Command.Right newRight = new Right(hero, newMap,this.Controls);
@@ -553,12 +585,21 @@ namespace Sokoban.Windows
                     if (mapNumber == numberOfMap)
                         endgame(hero);
                     endRound(hero);
+
+                    backMoveCounter = 0;
+                }
+
+                if (backMoveCounter < 3)
+                {
+                    backMoveCounter++;
                 }
                 
             }
 
             if (e.KeyValue == 37) //lewo
             {
+                originator.setState(convertMapToMemento(newMap));
+                careTaker.add(originator.saveStateToMemento());
                 int[] heroPos = newMap.findHeroPosition();
                 Hero hero = (Hero)newMap.getPart(heroPos[0], heroPos[1]);
                 Command.Left newLeft = new Left(hero, newMap, this.Controls);
@@ -571,6 +612,13 @@ namespace Sokoban.Windows
                     if (mapNumber == numberOfMap)
                         endgame(hero);
                     endRound(hero);
+
+                    backMoveCounter = 0;
+                }
+
+                if (backMoveCounter < 3)
+                {
+                    backMoveCounter++;
                 }
             }
 
@@ -579,9 +627,125 @@ namespace Sokoban.Windows
                   pressEsc();
                   //Environment.Exit(0);
             }
-
         }
 
-    
+        private List<List<int>> convertMapToMemento(Map map){
+            List<List<int>> state = new List<List<int>>();  
+
+            foreach (List<Part> list in map.getMap())
+            {
+                List<int> singleLine = new List<int>();
+
+                foreach (Part part in list)
+                {
+
+                    if (part.GetType() == typeof(Hero))
+                    {
+                        singleLine.Add(5);
+                    }
+
+
+                    if (part.GetType() == typeof(Box))
+                    {
+                        singleLine.Add(6);
+                    }
+
+
+                    if (part.GetType() == typeof(Empty))
+                    {
+                        singleLine.Add(1);
+                    }
+
+
+                    if (part.GetType() == typeof(Wall))
+                    {
+                        singleLine.Add(2);
+                    }
+
+
+                    if (part.GetType() == typeof(BoxPoint))
+                    {
+                        singleLine.Add(4);
+                    }
+
+
+                    if (part.GetType() == typeof(Floor))
+                    {
+                        singleLine.Add(3);
+                    }
+                }
+                state.Add(singleLine);
+            }
+
+            return state;
+        }
+
+        private List<List<Part>> convertMapFromMemento(List<List<int>> map)
+        {
+            List<List<Part>> state = new List<List<Part>>();
+            int posX = 0;
+            int posY = 0;
+            FactoryMapPart factory = new FactoryMapPart();
+
+            foreach (List<int> list in map)
+            {
+                int lineElementCounter = 0;
+                List<Part> singleLine = new List<Part>();
+
+                foreach (int part in list)
+                {
+
+                    if (part == 5)
+                    {
+                        lineElementCounter++;
+                        singleLine.Add(factory.produceHero(posX, posY, newMap.getStyle()));
+                    }
+
+
+                    if (part == 6)
+                    {
+                        singleLine.Add(factory.produceBox(posX, posY, newMap.getStyle()));
+                        lineElementCounter++;
+                    }
+
+
+                    if (part == 1)
+                    {
+                        singleLine.Add(factory.produceEmpty(posX, posY, newMap.getStyle()));
+                        lineElementCounter++;
+                    }
+
+
+                    if (part == 2)
+                    {
+                        singleLine.Add(factory.produceWall(posX, posY, newMap.getStyle()));
+                        lineElementCounter++;
+                    }
+
+
+                    if (part == 4)
+                    {
+                        singleLine.Add(factory.produceBoxPoint(posX, posY, newMap.getStyle()));
+                        lineElementCounter++;
+                    }
+
+
+                    if (part == 3)
+                    {
+                        singleLine.Add(factory.produceFloor(posX, posY, newMap.getStyle()));
+                        lineElementCounter++;
+                    }
+
+                    posX = posX + 64;
+
+                }
+                posY = posY + 64;
+                posX = posX - (64 * lineElementCounter);
+
+                state.Add(singleLine);
+            }
+
+            return state;
+        }
     }
 }

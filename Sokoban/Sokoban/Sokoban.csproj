@@ -73,7 +73,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="GameMap\Map.cs" />
-    <Compile Include="Memento\Caretaker.cs" />
+    <Compile Include="Memento\CareTaker.cs" />
     <Compile Include="Memento\Memento.cs" />
     <Compile Include="Memento\Originator.cs" />
     <Compile Include="Program.cs" />

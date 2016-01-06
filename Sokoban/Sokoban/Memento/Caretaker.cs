@@ -6,7 +6,25 @@ using System.Threading.Tasks;
 
 namespace Sokoban.Memento
 {
-    class Caretaker
+    class CareTaker
     {
+        private List<Memento> mementoList = new List<Memento>();
+
+        public void add(Memento state)
+        {
+            if(mementoList.Count() >= 3){
+                mementoList.RemoveAt(0);
+                mementoList.Add(state);
+            }
+            else
+            {
+                mementoList.Add(state);
+            }      
+        }
+
+        public Memento get(int index)
+        {
+            return mementoList[index];
+        }
     }
 }

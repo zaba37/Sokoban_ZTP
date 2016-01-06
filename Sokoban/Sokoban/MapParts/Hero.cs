@@ -27,7 +27,7 @@ namespace Sokoban.MapParts
 
             if (style.Contains("retro"))
             {
-                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\heroDown.png");
+                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\heroDownR.png");
             }
             else if (style.Contains("classic"))
             {
@@ -367,7 +367,6 @@ namespace Sokoban.MapParts
                 }
             }
         }
-    
     }
 }
 

@@ -8,5 +8,16 @@ namespace Sokoban.Memento
 {
     class Memento
     {
+        private List<List<int>> state;
+
+        public Memento(List<List<int>> state)
+        {
+            this.state = state;
+        }
+
+        public List<List<int>> getState()
+        {
+            return state;
+        }
     }
 }

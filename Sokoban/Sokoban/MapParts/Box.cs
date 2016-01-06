@@ -22,7 +22,7 @@ namespace Sokoban.MapParts
             
             //tutaj if sprawdzi jaki styl ma miec element i wstawi odpowiedni obrazek
             if(style.Contains("retro")){
-                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\Box.png");
+                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\BoxR.png");
                 
             }
             else if (style.Contains("classic"))
