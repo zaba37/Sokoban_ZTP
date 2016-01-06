@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Sokoban.Flyweight.Singleton;
 
 namespace Sokoban.MapParts
 {
@@ -19,14 +20,23 @@ namespace Sokoban.MapParts
         public int posY;
         private int numberSteps;
         private FactoryMapPart Factory;
-        public Hero(int height, int width, int startPosX, int startPosY)
+        public Hero(int startPosX, int startPosY, String style)
         {
             this.posX = startPosX;
             this.posY = startPosY;
-            this.graphics = Image.FromFile(@"Map\heroDown.png");
+
+            if (style.Contains("retro"))
+            {
+                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\heroDown.png");
+            }
+            else if (style.Contains("classic"))
+            {
+                this.graphics = GraphicManager.GetInstance().GetTexture(@"Map\heroDown.png");
+            }
+
             picturebox = new PictureBox();
-            picturebox.Height = height;
-            picturebox.Width = width;
+            picturebox.Height = 64;
+            picturebox.Width = 64;
             point = new Point(this.posX, this.posY);
             picturebox.Image = this.graphics;
             picturebox.Location = point;

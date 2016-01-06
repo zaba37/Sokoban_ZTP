@@ -19,7 +19,7 @@ namespace Sokoban.Factory
             return new BoxPoint(x, y, style);
         }
 
-        public Part produceEmpty()
+        public Part produceEmpty(int posX, int posY, String style)
         {
             return new Empty();
         }
@@ -32,6 +32,11 @@ namespace Sokoban.Factory
         public Part produceWall(int x, int y, String style)
         {
             return new Wall(x, y, style);
+        }
+
+        public Part produceHero(int x, int y, String style)
+        {
+            return new Hero(x, y, style);
         }
     }
 }

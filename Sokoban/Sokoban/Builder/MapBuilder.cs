@@ -14,12 +14,14 @@ namespace Sokoban.Builder
     abstract class MapBuilder
     {
         protected Map map;
+        protected List<Part> singleMapElementLine;
         protected FactoryMapPart factory;
 
-        public MapBuilder()
+        public MapBuilder()  
         {
             map = new Map();
             factory = new FactoryMapPart();
+            singleMapElementLine = new List<Part>();
         }
 
         public Map getMap()
@@ -27,44 +29,21 @@ namespace Sokoban.Builder
             return map;
         }
 
-        protected List<List<int>> readFile(string path)
-        {
-            List<List<int>> intMap = null;
-
-            try
-            {
-                var lines = File.ReadAllLines(path);
-                var map = lines.Select(l => l.Split(' ')).ToList();
-                intMap = map.Select(l => l.Select(i => int.Parse(i)).ToList()).ToList();
-                return intMap;
-            }
-            catch
-            {
-                Environment.Exit(0);
-            }
-
-            return intMap;
+        public void addPartListToMap(){
+            map.AddPartList(singleMapElementLine);
+            singleMapElementLine = new List<Part>();
         }
 
-        protected List<Point> findPositionPoints(List<List<int>> map)
+        public void setPointList(List<Point> list)
         {
-            List<Point> positionsList = new List<Point>();
-            for (int i = 0; i < map.Count(); i++)
-            {
-
-                for (int j = 0; j < map[i].Count(); j++)
-                {
-                    if (map[i][j] == 4)
-                    {
-                        Point newPosition = new Point(i, j);
-                        positionsList.Add(newPosition);
-                    }
-                }
-            }
-            return positionsList;
+            map.setPointList(list);
         }
 
-        //na diagramie mamy metody ktore buduja sciane, podloge itp ale one sa tez w fabryce wiec nie wiem czy poztzebujemy duplikacji tego samego czy gotowej metody ktora zrobi mape
-        abstract public void buildMap(int lvl);
+        abstract public void buildBox(int posX, int posY);
+        abstract public void buildBoxPoint(int posX, int posY);
+        abstract public void buildEmpty(int posX, int posY);
+        abstract public void buildFloor(int posX, int posY);
+        abstract public void buildWall(int posX, int posY);
+        abstract public void buildHero(int posX, int posY);
     }
 }
