@@ -253,7 +253,7 @@ namespace Sokoban.Windows
                         }
                         break;
                     case "BackTag":
-                        var menu = (Menu)Tag;
+                        var menu = (GameMenu)Tag;
                       //  menu.Show();
                         this.Hide();
                         break;
