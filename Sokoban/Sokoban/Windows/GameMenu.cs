@@ -78,7 +78,6 @@ namespace Sokoban.Windows
                         break;
 
                     case "NewGameTag":
-
                         Game newGame = new Game();
                         newGame.Tag = this;
                         newGame.Show(this);

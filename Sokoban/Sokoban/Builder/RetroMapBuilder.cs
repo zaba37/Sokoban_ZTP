@@ -11,6 +11,10 @@ namespace Sokoban.Builder
 {
     class RetroMapBuilder : MapBuilder
     {
+        public RetroMapBuilder()
+        {
+            map.setStyle("retro");
+        }
 
         public override void buildBox(int posX, int posY)
         {

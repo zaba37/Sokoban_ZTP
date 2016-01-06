@@ -11,6 +11,11 @@ namespace Sokoban.Builder
     class ClassicMapBuilder : MapBuilder 
     {
 
+        public ClassicMapBuilder()
+        {
+            map.setStyle("classic");
+        }
+
         public override void buildBox(int posX, int posY)
         {
             singleMapElementLine.Add(factory.produceBox(posX, posY, "classic"));

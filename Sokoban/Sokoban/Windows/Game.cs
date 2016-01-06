@@ -15,13 +15,14 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Sokoban.Sound;
 namespace Sokoban.Windows
 {
     public partial class Game : Form
     {
 
 
-       // SoundPlayer typewriter = SoundSingleton.getSoundPlayerInstance();
+       SoundPlayer typewriter = Player.getSoundPlayerInstance();
       //  Pause pauseWindow;
 
         private List<List<int>> readNumbers;
@@ -112,8 +113,8 @@ namespace Sokoban.Windows
             heightElement = 64;
             totalPoints = 0;
 
-           // typewriter.Stop();
-           // typewriter.SoundLocation = @"Music\step.wav";
+            typewriter.Stop();
+            typewriter.SoundLocation = @"Music\step.wav";
 
             startScreen = new PictureBox[9];
             startScreen[0] = new PictureBox();
@@ -153,7 +154,6 @@ namespace Sokoban.Windows
             newDirector.setMapBuilder(ret);
             newDirector.constructMap(1);
             newMap = newDirector.getMap();          
-            newMap.setStyle("retro");
             
             initMap(newMap);
 
@@ -168,11 +168,6 @@ namespace Sokoban.Windows
             framePb.Height = framePb.Image.Height;
             framePb.Width = framePb.Image.Width;
             framePb.BackColor = Color.Transparent;
-
-
-
-
-
 
             infoTimeLabelLocation = new Point(1026, 70);
             infoTimeLabel = new Label();
@@ -240,23 +235,18 @@ namespace Sokoban.Windows
             BoxesLabel.Text = "0";
             this.Controls.Add(BoxesLabel);
             this.Controls.Add(framePb);
-
-            
         }
 
 
 
         private void initMap(Map map)
         {
-            
-            
-            
+            this.Controls.Add(cbStart);
+            cbStart.Show();
+            this.Controls.Add(startScreen[mapNumber - 1]);
+            startScreen[mapNumber - 1].Show();
             initLabels();
-           // cbStart.Show();
-            //this.Controls.Add(startScreen[mapNumber - 1]);
-            //startScreen[mapNumber - 1].Show();
             initButtons();
-            //PointsList = null;
             previousnumberShiftsBoxes = 0;
             previousNumberSteps = 0;
 
@@ -338,10 +328,23 @@ namespace Sokoban.Windows
 
         private void mouseClick(object sender, MouseEventArgs e)
         {
-           
-           
-                
-            
+            if (e.Button == MouseButtons.Left)
+            {
+                switch (((CustomButton)sender).Tag.ToString())
+                {
+                    case "StartTag":
+                        timer.AutoReset = true;
+                        startTime = DateTime.Now;
+                        timer.Start();
+                        startScreen[mapNumber - 1].Hide();
+                        cbStart.Hide();
+                        cbArrowUp.MouseClick += new MouseEventHandler(mouseClick);
+                        cbArrowDown.MouseClick += new MouseEventHandler(mouseClick);
+                        cbArrowRight.MouseClick += new MouseEventHandler(mouseClick);
+                        cbArrowLeft.MouseClick += new MouseEventHandler(mouseClick);
+                        break;
+                }
+            }  
         }
 
 
@@ -473,9 +476,9 @@ namespace Sokoban.Windows
             if (totalPoints < 0)
                 totalPoints = 0;
 
-            //typewriter.Stop();
-            //typewriter.SoundLocation = @"Music\mainMusic.wav";
-            //typewriter.PlayLooping();
+            typewriter.Stop();
+            typewriter.SoundLocation = @"Music\mainMusic.wav";
+            typewriter.PlayLooping();
 
             EndGame endGameWindow = new EndGame(totalPoints);
             endGameWindow.Tag = this.Tag;
@@ -495,6 +498,7 @@ namespace Sokoban.Windows
                 Command.Up newUp = new Up(hero, newMap, this.Controls);
                 newMove.SetMode(newUp);
                 newMove.Command();
+                typewriter.Play();
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(),newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
@@ -509,6 +513,7 @@ namespace Sokoban.Windows
                 Command.Down newDown = new Down(hero, newMap, this.Controls);
                 newMove.SetMode(newDown);
                 newMove.Command();
+                typewriter.Play();
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(), newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
@@ -523,6 +528,7 @@ namespace Sokoban.Windows
                 Command.Right newRight = new Right(hero, newMap,this.Controls);
                 newMove.SetMode(newRight);
                 newMove.Command();
+                typewriter.Play();
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(), newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
@@ -539,6 +545,7 @@ namespace Sokoban.Windows
                 Command.Left newLeft = new Left(hero, newMap, this.Controls);
                 newMove.SetMode(newLeft);
                 newMove.Command();
+                typewriter.Play();
                 if (CheckEndRound(numberSetBoxes(newMap.getMap(), newMap.getPointList()), newMap.getPointList()))
                 {
                     if (mapNumber == numberOfMap)
