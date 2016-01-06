@@ -24,7 +24,9 @@ namespace Sokoban.Memento
 
         public Memento get(int index)
         {
-            return mementoList[index];
+            Memento tmp = mementoList[index];
+            mementoList.RemoveAt(index);
+            return tmp;
         }
     }
 }
